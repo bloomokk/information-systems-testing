@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Книги — Библиотека{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Книги</h1>
+    <a class="btn btn-primary" href="{% url 'core:book_create' %}">+ Добавить книгу</a>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        {% if books %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Название</th>
+                        <th>Автор</th>
+                        <th>Год</th>
+                        <th width="140"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.year|default:"—" }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:book_edit' book.pk %}">Изменить</a>
+                            <a class="btn btn-sm btn-outline-danger" href="{% url 'core:book_delete' book.pk %}">Удалить</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if page_obj.has_other_pages %}
+        <div class="p-3 border-top">
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>{% endif %}
+                    <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+                    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперёд</a></li>{% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        {% else %}
+        <p class="text-muted p-4 mb-0">Книг пока нет. <a href="{% url 'core:book_create' %}">Добавить первую</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

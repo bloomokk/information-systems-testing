@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Возврат книги — Библиотека{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Подтвердить возврат?</h2>
+                <p class="text-muted mb-2">Книга: «{{ loan.book.title }}»</p>
+                <p class="text-muted mb-4">Читатель: {{ loan.reader.name }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Вернул книгу</button>
+                        <a class="btn btn-outline-secondary" href="{% url 'core:issue_list' %}">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Читатели — Библиотека{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Читатели</h1>
+    <a class="btn btn-primary" href="{% url 'core:reader_create' %}">+ Зарегистрировать</a>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        {% if readers %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Email</th>
+                        <th>Телефон</th>
+                        <th width="140"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in readers %}
+                    <tr>
+                        <td>{{ r.name }}</td>
+                        <td>{{ r.email|default:"—" }}</td>
+                        <td>{{ r.phone|default:"—" }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:reader_edit' r.pk %}">Изменить</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if page_obj.has_other_pages %}
+        <div class="p-3 border-top">
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>{% endif %}
+                    <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+                    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперёд</a></li>{% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        {% else %}
+        <p class="text-muted p-4 mb-0">Читателей пока нет. <a href="{% url 'core:reader_create' %}">Зарегистрировать первого</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

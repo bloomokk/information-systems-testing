@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Блог</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
+      --blog-primary: #0d6efd;
+      --blog-bg: #f0f4f8;
+      --card-bg: #fff;
+      --border-subtle: rgba(0,0,0,.06);
+    }
+    body {
+      font-family: var(--bs-body-font-family);
+      background: var(--blog-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar-blog {
+      background: linear-gradient(135deg, #1e3a5f 0%, #0d6efd 100%) !important;
+      box-shadow: 0 4px 14px rgba(13, 110, 253, .25);
+    }
+    .navbar-blog .navbar-brand {
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+    .navbar-blog .nav-link, .navbar-blog .navbar-brand {
+      color: rgba(255,255,255,.95) !important;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #0d6efd 100%);
+      color: #fff;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      border-radius: 0 0 1.5rem 1.5rem;
+      box-shadow: 0 8px 24px rgba(13, 110, 253, .2);
+    }
+    .page-header h1 {
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .page-header p {
+      opacity: .9;
+      margin: .5rem 0 0;
+    }
+    .card-post {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      transition: transform .15s ease, box-shadow .2s ease;
+      overflow: hidden;
+    }
+    .card-post:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,.1);
+      transform: translateY(-2px);
+    }
+    .card-post .card-body {
+      padding: 1.5rem 1.75rem;
+    }
+    .card-post .card-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #1a1d21;
+      margin-bottom: .5rem;
+    }
+    .post-meta {
+      font-size: .8125rem;
+      color: #6c757d;
+      margin-bottom: .75rem;
+    }
+    .post-meta i {
+      font-size: .875rem;
+      margin-right: .25rem;
+    }
+    .card-post .card-text {
+      color: #374151;
+      line-height: 1.6;
+    }
+    .comments-section {
+      background: #f8fafc;
+      border-radius: .75rem;
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
+      border: 1px solid var(--border-subtle);
+    }
+    .comments-section .section-title {
+      font-size: .875rem;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: .75rem;
+    }
+    .comment-item {
+      background: var(--card-bg);
+      border-radius: .5rem;
+      padding: .75rem 1rem;
+      margin-bottom: .5rem;
+      border: 1px solid var(--border-subtle);
+      transition: background .15s;
+    }
+    .comment-item:hover {
+      background: #f8fafc;
+    }
+    .comment-item .comment-author {
+      font-weight: 600;
+      color: #1a1d21;
+      font-size: .875rem;
+    }
+    .comment-item .comment-date {
+      font-size: .75rem;
+      color: #9ca3af;
+    }
+    .comment-item .comment-text {
+      font-size: .875rem;
+      color: #4b5563;
+      margin-top: .25rem;
+    }
+    .form-new-post {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      border: none;
+    }
+    .form-new-post .form-label {
+      font-weight: 600;
+      color: #374151;
+    }
+    .form-new-post .form-control, .form-new-post .form-control:focus {
+      border-radius: .5rem;
+      border-color: #e5e7eb;
+    }
+    .form-new-post .form-control:focus {
+      border-color: var(--blog-primary);
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, .15);
+    }
+    .btn-publish {
+      padding: .5rem 1.5rem;
+      font-weight: 600;
+      border-radius: .5rem;
+    }
+    .btn-action {
+      font-size: .8125rem;
+      padding: .25rem .5rem;
+      border-radius: .5rem;
+    }
+    .footer-blog {
+      margin-top: auto;
+      padding: 1.5rem 0;
+      font-size: .875rem;
+      color: #6c757d;
+      border-top: 1px solid var(--border-subtle);
+    }
+    #posts-list .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #9ca3af;
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 2px dashed #e5e7eb;
+    }
+    .loading-spinner {
+      display: inline-block;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-blog py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+        <i class="bi bi-journal-text fs-4"></i>
+        Блог
+      </a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="container">
+      <h1>Добро пожаловать в блог</h1>
+      <p class="mb-0">Пишите посты и обсуждайте их в комментариях</p>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+    <section class="mb-5">
+      <div class="card form-new-post">
+        <div class="card-body p-0">
+          <h2 class="h5 fw-bold mb-3 text-dark">
+            <i class="bi bi-plus-circle me-2 text-primary"></i>Новый пост
+          </h2>
+          <form id="form-new-post">
+            <div class="mb-3">
+              <label class="form-label" for="new-post-title">Заголовок</label>
+              <input type="text" class="form-control" id="new-post-title" placeholder="О чём пост?" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="new-post-content">Текст</label>
+              <textarea class="form-control" id="new-post-content" rows="3" placeholder="Напишите текст поста..." required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="new-post-author">Ваше имя</label>
+              <input type="text" class="form-control" id="new-post-author" placeholder="Как к вам обращаться?" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-publish">
+              <i class="bi bi-send me-1"></i>Опубликовать
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="h5 fw-bold mb-3 text-dark">
+      <i class="bi bi-card-text me-2 text-primary"></i>Посты
+    </h2>
+    <div id="posts-list"></div>
+  </main>
+
+  <footer class="footer-blog">
+    <div class="container text-center">
+      Блог · Bootstrap 5
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

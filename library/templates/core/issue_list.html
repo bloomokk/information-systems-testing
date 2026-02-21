@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Выдачи — Библиотека{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Книги на руках</h1>
+    <a class="btn btn-primary" href="{% url 'core:issue_create' %}">Выдать книгу</a>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        {% if loans %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Книга</th>
+                        <th>Читатель</th>
+                        <th>Дата выдачи</th>
+                        <th width="120"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                        <td>{{ loan.book.title }}</td>
+                        <td>{{ loan.reader.name }}</td>
+                        <td>{{ loan.issued_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-success" href="{% url 'core:issue_return' loan.pk %}">Возврат</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted p-4 mb-0">Сейчас ни одна книга не выдана. <a href="{% url 'core:issue_create' %}">Выдать книгу</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
