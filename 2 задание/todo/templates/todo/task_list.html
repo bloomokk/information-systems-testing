@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Список задач{% endblock %}
+
+{% block content %}
+<h1>Задачи</h1>
+
+{% for task in tasks %}
+<div class="card">
+    <a href="{% url 'todo:task_detail' task.pk %}" style="font-weight:600;">{{ task.title }}</a>
+    {% if task.completed %}
+    <span class="badge badge-done">выполнено</span>
+    {% else %}
+    <span class="badge badge-todo">к выполнению</span>
+    {% endif %}
+    <span style="margin-left:8px;">
+        <form action="{% url 'todo:task_toggle_complete' task.pk %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline">{{ task.completed|yesno:"Отменить,Готово" }}</button>
+        </form>
+        <a href="{% url 'todo:task_edit' task.pk %}" class="btn btn-outline" style="margin-left:4px;">Изменить</a>
+        <a href="{% url 'todo:task_delete' task.pk %}" class="btn btn-danger" style="margin-left:4px;">Удалить</a>
+    </span>
+    {% if task.description %}
+    <p class="muted" style="margin:6px 0 0;">{{ task.description|truncatewords:12 }}</p>
+    {% endif %}
+</div>
+{% empty %}
+<div class="card">
+    <p class="muted">Пусто. <a href="{% url 'todo:task_create' %}">Добавить задачу</a>.</p>
+</div>
+{% endfor %}
+
+{% if page_obj and page_obj.has_other_pages %}
+<p class="muted" style="margin-top:16px;">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">← Назад</a>{% endif %}
+    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Вперёд →</a>{% endif %}
+</p>
+{% endif %}
+{% endblock %}

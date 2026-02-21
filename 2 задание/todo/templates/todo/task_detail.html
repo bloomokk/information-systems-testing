@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="margin:0 0 8px;">{{ task.title }}</h1>
+    {% if task.completed %}
+    <span class="badge badge-done">выполнено</span>
+    {% else %}
+    <span class="badge badge-todo">к выполнению</span>
+    {% endif %}
+    {% if task.description %}
+    <p style="margin:14px 0 0; white-space:pre-wrap;">{{ task.description }}</p>
+    {% endif %}
+    <p class="muted" style="margin:12px 0 0;">{{ task.created_at|date:"d.m.Y H:i" }}</p>
+</div>
+<div style="margin-top:12px;">
+    <form action="{% url 'todo:task_toggle_complete' task.pk %}?next={{ request.path }}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline">{{ task.completed|yesno:"Отменить выполнение,Отметить выполненным" }}</button>
+    </form>
+    <a href="{% url 'todo:task_edit' task.pk %}" class="btn btn-outline">Изменить</a>
+    <a href="{% url 'todo:task_delete' task.pk %}" class="btn btn-danger">Удалить</a>
+</div>
+<p style="margin-top:20px;"><a href="{% url 'todo:task_list' %}">← Назад к списку</a></p>
+{% endblock %}
